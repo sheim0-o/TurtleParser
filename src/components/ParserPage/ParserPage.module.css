@@ -1,0 +1,28 @@
+.parser-page {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+}
+.parser-page__title__OH93G {
+    color: #3498db;
+    margin-bottom: 20px;
+}
+
+.parser-page__send-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.parser-page__send-btn button {
+    background-color: #1faa37;
+    margin: 10px;
+    width: 80%;
+}
+.parser-page__send-btn button:hover {
+    background-color: #108524;
+}

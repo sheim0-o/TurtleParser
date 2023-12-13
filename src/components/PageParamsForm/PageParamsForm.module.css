@@ -1,0 +1,50 @@
+.page-params-form {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ecf0f1;
+}
+.page-params-form span {
+    width: 150px;
+    margin-right: 10px;
+    color: #555;
+}
+.page-params-form__title {
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.page-params-form__multiple-pages-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+  
+.page-params-form__multiple-pages-checkbox span {
+    margin-left: 10px;
+    color: #555;
+}
+  
+.page-params-form__multiple-pages-block {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+  
+.page-params-form__multiple-pages-param {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+  
+.page-params-form__multiple-pages-param span {
+    width: 150px;
+    margin-right: 10px;
+    color: #555;
+}
+  
+.page-params-form__multiple-pages-param input {
+    margin-right: 10px;
+}

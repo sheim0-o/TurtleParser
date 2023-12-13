@@ -1,0 +1,13 @@
+.input-number {
+    width: calc(100% - 16px);
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #999;
+    border-radius: 4px;
+    background-color: #ecf0f1;
+    transition: background-color 0.3s ease-in-out;
+}
+.input-number:focus {
+    background-color: #dfe6e9;
+}

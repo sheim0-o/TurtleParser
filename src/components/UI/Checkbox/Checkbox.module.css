@@ -1,0 +1,14 @@
+.checkbox {
+    width: 20px;
+    aspect-ratio: 1 / 1;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ecf0f1;
+    transition: background-color 0.3s ease-in-out;
+}
+.checkbox:focus {
+    background-color: #dfe6e9;
+}

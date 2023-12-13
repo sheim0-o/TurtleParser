@@ -1,0 +1,7 @@
+.search-element {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    gap: 20px;
+}
