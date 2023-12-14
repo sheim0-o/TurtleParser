@@ -38,7 +38,7 @@ export default function ParserPage({}: ParserPageProps) {
 
   return (    
     <div className={CSS["parser-page"]}>
-      <h1 className={CSS["parser-page__title"]}>Turtle Parser</h1>
+      <h1 className={CSS["parser-page__title"]}>Turtle Parser App</h1>
       <InputText placeholder='Enter the url of the site page you need' value={url} onChange={(handleUrlChange)} textRequired={true} />
       <PageParamsForm pageParams={pageParams} setPageParams={setPageParams} />
       <ListOfElementsForm listOfElements={containerWithElements} setListOfElements={setContainerWithElements} />
