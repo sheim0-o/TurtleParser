@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ParserForm, SearchedElement, TypeOfSearchedInfoPlace } from "../types";
+import { PYTHON_PARSER_URL } from "../strings";
 
 export const isObjectFilled = (obj: ParserForm): string => {
     let hasAtLeastOneSearchedInfo:boolean = false;
@@ -69,7 +70,7 @@ export function isValidUrl(url: string): boolean {
 
 export const handleDownload = async (jsonParserForm:string) => {
   try {
-    const response = await axios.post('http://sheim.pythonanywhere.com/api/py-parse', {
+    const response = await axios.post(PYTHON_PARSER_URL+'/api/py-parse', {
       json: jsonParserForm,
     });
     const blob = new Blob([new TextEncoder().encode(response.data)], { type: 'application/json;charset=utf-8' });

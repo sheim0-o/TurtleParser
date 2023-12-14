@@ -1,5 +1,5 @@
 .parser-page {
-    width: clamp(300px, 70vw, 900px);
+    width: clamp(300px, 80vw, 900px);
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;

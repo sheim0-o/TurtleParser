@@ -6,7 +6,6 @@ import {RoundedButton} from '../UI/RoundedButton/RoundedButton';
 import { ElementsContainer, PageParams, ParserForm, SearchedElement } from '../../types';
 import {InputText} from '../UI/InputText/InputText';
 import ElementForm from '../ElementForm/ElementForm';
-import axios from 'axios';
 import { handleDownload, isObjectFilled } from '../utility';
 
 type ParserPageProps = {}
