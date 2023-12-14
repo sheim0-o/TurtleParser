@@ -43,7 +43,7 @@ export default function ParserPage({}: ParserPageProps) {
       <InputText placeholder='Enter the url of the site page you need' value={url} onChange={(handleUrlChange)} textRequired={true} />
       <PageParamsForm pageParams={pageParams} setPageParams={setPageParams} />
       <ListOfElementsForm listOfElements={containerWithElements} setListOfElements={setContainerWithElements} />
-      <ElementForm onChildElementChange={(newElement:SearchedElement) => handleSearchedElementChange(newElement)} />
+      <ElementForm onChildElementChange={(newElement:SearchedElement) => handleSearchedElementChange(newElement)} elemIndex={1}/>
       <div className={CSS["parser-page__send-btn"]}>
         <RoundedButton text='Send form' handleClick={()=>handleParse()} />
       </div>

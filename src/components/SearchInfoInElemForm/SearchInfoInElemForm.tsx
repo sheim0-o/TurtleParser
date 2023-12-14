@@ -5,10 +5,12 @@ import Selectable from '../UI/Selectable/Selectable';
 import { SearchedInfo, TypeOfSearchedInfoPlace, getTypeOfSearchedInfoPlaceByString } from '../../types';
 
 type SearchInfoInElemFormProps = {
-  callback:(searchedInfo:SearchedInfo)=>void
+  callback:(searchedInfo:SearchedInfo)=>void;
+  elemIndex:number;
+  infoIndex:number;
 };
 
-export const SearchInfoInElemForm = memo(({ callback }: SearchInfoInElemFormProps) => {
+export const SearchInfoInElemForm = memo(({ callback, elemIndex, infoIndex }: SearchInfoInElemFormProps) => {
   const [fieldName, setFieldName] = useState<string>("");
   const [typeOfValuePlace, setTypeOfValuePlace] = useState<TypeOfSearchedInfoPlace>(TypeOfSearchedInfoPlace.InnerText);
   const [attributeName, setAttributeName] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export const SearchInfoInElemForm = memo(({ callback }: SearchInfoInElemFormProp
 
   return (
     <div className={CSS['field-of-element']}>
+      <h4 className={CSS["field-of-element__title"]}>Searched info {infoIndex} from element {elemIndex}</h4>
       <InputText value={fieldName} onChange={handleFieldNameChange} placeholder={"Enter field name"} textRequired={true}/>
       <Selectable value={typeOfValuePlace} options={Object.keys(TypeOfSearchedInfoPlace)} callback={handleTypeChange} />
       {

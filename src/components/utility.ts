@@ -69,13 +69,10 @@ export function isValidUrl(url: string): boolean {
 
 export const handleDownload = async (jsonParserForm:string) => {
   try {
-    const response = await axios.post('http://127.0.0.1:5000/api/py-parse', {
+    const response = await axios.post('http://sheim.pythonanywhere.com/api/py-parse', {
       json: jsonParserForm,
     });
-    console.log(response)
-    
     const blob = new Blob([new TextEncoder().encode(response.data)], { type: 'application/json;charset=utf-8' });
-    console.log(blob)
     
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);

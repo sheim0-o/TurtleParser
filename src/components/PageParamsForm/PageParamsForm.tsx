@@ -31,7 +31,7 @@ export default function PageParamsForm({pageParams, setPageParams}: PageParamsFo
 
   return (
     <div className={CSS["page-params-form"]}>
-      <h2 className={CSS["page-params-form__title"]}>Page Parameters</h2>
+      <h3 className={CSS["page-params-form__title"]}>Page Parameters</h3>
       <div className={CSS["page-params-form__multiple-pages-checkbox"]}>
         <span>Is Multiple Pages</span> 
         <Checkbox isChecked={isMultiplePages} setIsChecked={(isChecked:boolean)=>setIsMultiplePages(isChecked)} />

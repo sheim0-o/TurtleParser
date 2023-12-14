@@ -6,9 +6,10 @@ import { ElementsContainer, SearchedElement, SearchedInfo } from '../../types';
 import { SearchInfoInElemForm } from '../SearchInfoInElemForm/SearchInfoInElemForm';
 type ElementFormProps = {
     onChildElementChange: (newChildElem: SearchedElement) => void;
+    elemIndex:number;
 }
 
-export default function ElementForm({onChildElementChange}: ElementFormProps) {
+export default function ElementForm({onChildElementChange, elemIndex}: ElementFormProps) {
     const [currentElement, setCurrentElement] = useState<SearchedElement>(new SearchedElement());
     const getNewSearchedElement = (el:SearchedElement): SearchedElement => Object.assign(new SearchedElement(), el) as SearchedElement; 
 
@@ -60,41 +61,40 @@ export default function ElementForm({onChildElementChange}: ElementFormProps) {
  
     return (
         <div className={CSS["element-form"]}>
-            <h3 className={CSS["element-form__title"]}>Element Form</h3>
+            <h3 className={CSS["element-form__title"]}>Searched element {elemIndex}</h3>
             <SearchElementForm callback={handleChangedCurrentAttributes} />
         
             <div className={CSS["element-form__list-of-searched-info"]}>
+                <RoundedButton text='Add searched info in this element' handleClick={handleAddSearchedInfoField} />
                 {
                 currentElement.searchedInfo.length > 0
-                    ? currentElement.searchedInfo.map((searchedInfoField, index) => (
-                        <div className={CSS["element-form__searched-info-field"]} key={index}>
-                            <SearchInfoInElemForm callback={(searchedInfo) => handleChangedSearchedInfoField(index, searchedInfo)} />
+                    ? currentElement.searchedInfo.map((searchedInfoField, i) => (
+                        <div className={CSS["element-form__searched-info-field"]} key={i}>
+                            <SearchInfoInElemForm callback={(searchedInfo) => handleChangedSearchedInfoField(i, searchedInfo)} elemIndex={elemIndex} infoIndex={i+1}/>
                             <div className={CSS["element-form__searched-info-field-delete-btn"]}>
-                                <RoundedButton text='Remove searched info' handleClick={() => handleRemoveSearchedInfoField(index)} />
+                                <RoundedButton text='Remove searched info' handleClick={() => handleRemoveSearchedInfoField(i)} />
                             </div>
                         </div>
                     ))
                     : <p className={CSS["element-form__no-data-message"]}>No searched info selected</p>
                 }
             </div>
-            <RoundedButton text='Add searched info in this element' handleClick={handleAddSearchedInfoField} />
         
             <div className={CSS["element-form__list-of-searched-elements"]}>
+                <RoundedButton text='Add child element' handleClick={handleAddChildElement} />
                 {
                 currentElement.searchedElements.length > 0 
-                    ? currentElement.searchedElements.map((element, index) => (
-                        <div className={CSS["element-form__child-searched-element"]} key={index}>
-                            <ElementForm onChildElementChange={(newElement) => handleChangedChildElement(index, newElement)} />
+                    ? currentElement.searchedElements.map((element, i) => (
+                        <div className={CSS["element-form__child-searched-element"]} key={i}>
+                            <ElementForm onChildElementChange={(newElement) => handleChangedChildElement(i, newElement)} elemIndex={elemIndex+i+1} />
                             <div className={CSS["element-form__child-searched-element-delete-btn"]}>
-                                <RoundedButton text='Remove this element' handleClick={() => handleRemoveChildElement(index)} />
+                                <RoundedButton text='X' handleClick={() => handleRemoveChildElement(i)} />
                             </div>
                         </div>
                     ))
-                    : <p className={CSS["element-form__no-data-message"]}>No child elements selected</p>
+                    : <div className={CSS["element-form__no-data-message"]}><p>No child elements selected</p></div>
                 }
             </div>
-        
-            <RoundedButton text='Add child element' handleClick={handleAddChildElement} />
         </div>
     );
 };

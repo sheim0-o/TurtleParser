@@ -16,7 +16,7 @@ export default function ContainerWithElements({listOfElements, setListOfElements
 
     return (
         <div className={CSS["container-with-elements"]}>
-            <h2 className={CSS["container-with-elements__title"]}>List of Elements</h2>
+            <h3 className={CSS["container-with-elements__title"]}>Container with searched element</h3>
             <SearchElementForm callback={handleChange} />
         </div>
     );

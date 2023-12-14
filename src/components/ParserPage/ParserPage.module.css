@@ -1,15 +1,22 @@
 .parser-page {
-    max-width: 800px;
-    margin: 50px auto;
+    width: clamp(300px, 70vw, 900px);
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding: 20px;
+    box-sizing: border-box;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
 }
-.parser-page__title__OH93G {
-    color: #3498db;
+
+.parser-page__title {
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
