@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ParserForm, SearchedElement, TypeOfSearchedInfoPlace } from "../types";
-import { PYTHON_PARSER_URL } from "../strings";
+import { PARSER_API_KEY, PYTHON_PARSER_URL } from "../strings";
 
 export const isObjectFilled = (obj: ParserForm): string => {
     let hasAtLeastOneSearchedInfo:boolean = false;
@@ -70,9 +70,7 @@ export function isValidUrl(url: string): boolean {
 
 export const handleDownload = async (jsonParserForm:string) => {
   try {
-    const response = await axios.post(PYTHON_PARSER_URL+'/api/py-parse', {
-      json: jsonParserForm,
-    });
+    const response = await axios.post(PYTHON_PARSER_URL+'/api/parser', { "api_key": PARSER_API_KEY, json: jsonParserForm });
     const blob = new Blob([new TextEncoder().encode(response.data)], { type: 'application/json;charset=utf-8' });
     
     const link = document.createElement('a');
@@ -83,6 +81,19 @@ export const handleDownload = async (jsonParserForm:string) => {
     link.click();
     document.body.removeChild(link);
   } catch (error) {
-    console.log('Error downloading file:', error);
+    let errorText = "";
+    if (axios.isAxiosError(error))
+    {
+      const responseData = error.response?.data.detail;
+      if(responseData?.error)
+        errorText = responseData.error;
+      else if(responseData?.result_data?.errors[0]?.error)
+        errorText = responseData.result_data?.errors[0]?.error;
+      else
+        errorText = error.message;
+    }
+    if(errorText!="")
+      alert(errorText)
+    console.error('Error:', error);
   }
 };
