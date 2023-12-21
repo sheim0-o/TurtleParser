@@ -1,7 +1,85 @@
-.search-element {
+.element-form {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+}
+.element-form__open-tag {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.element-form__open-tag-attrs {
+    display: flex;
+    gap: 20px;
+}
+.element-form__close-tag {
+    margin-top: 20px;
+}
+.element-form__content {
+    margin-left: 30px;
+}
+.element-form__content-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+
+.element-form__list-of-child-elements {
+
+}
+.element-form__child-element {
+    display: flex;
+    flex-direction: row;
+}
+.element-form__child-element-delete-btn button {
+    width: 35px;
+    aspect-ratio: 1 / 1;
+
+    margin-top: 7px;
+    margin-right: 7px;
+    padding: 0;
+
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    margin-right: 10px;
+    justify-content: center;
+    
+    border: none;
+    cursor: pointer;
+    border: 2px solid #e03535;
+    color: #e03535;
+    border-radius: 0px;
+    background-color: transparent;  
+    font-size: 1.6em;
+}
+.element-form__child-element-delete-btn button:hover {
+    background-color: transparent;
+    color: #b12424;
+    border-color: #b12424;
+}
+
+
+
+.element-form__list-of-searched-info {
+    width: clamp(200px, 30vw, 350px);
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
     gap: 20px;
+    display: flex;
+    flex-direction: column;
+    
+    font-family: 'Arial', sans-serif;
+}
+.element-form__no-data-message {
+    padding-left: 20px;
+}
+.element-form__searched-info-delete-btn button {
+    background-color: #e03535;
+    width: 100%;
+}
+.element-form__searched-info-delete-btn button:hover {
+    background-color: #b12424;
 }

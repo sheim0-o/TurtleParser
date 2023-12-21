@@ -1,24 +1,25 @@
 import { useState } from 'react'
 import CSS from "./ParserPage.module.css"
-import PageParamsForm from '../PageParamsForm/PageParamsForm';
-import ListOfElementsForm from '../ContainerWithElements/ContainerWithElements';
 import {RoundedButton} from '../UI/RoundedButton/RoundedButton';
 import { ElementsContainer, PageParams, ParserForm, SearchedElement } from '../../types';
 import {InputText} from '../UI/InputText/InputText';
-import ElementForm from '../ElementForm/ElementForm';
 import { handleDownload, isObjectFilled } from '../utility';
+import ContainerWithElements from '../ContainerWithElements/ContainerWithElements';
+import PageParamsForm from '../PageParamsForm/PageParamsForm';
+import ElementForm from '../ElementForm/ElementForm';
+import { SearchElementForm } from '../SearchElementForm/SearchElementForm';
 
 type ParserPageProps = {}
 
 export default function ParserPage({}: ParserPageProps) {
   const [pageParams, setPageParams] = useState<PageParams>(new PageParams());
-  const [containerWithElements, setContainerWithElements] = useState<ElementsContainer>(new ElementsContainer());
+  const [elementsContainer, setElementsContainer] = useState<ElementsContainer>(new ElementsContainer());
   const [searchedElement, setSearchedElement] = useState<SearchedElement>(new SearchedElement());
   const [url, setUrl] = useState<string>('');
 
 
   const handleParse = async () => {
-    const parserForm: ParserForm = new ParserForm(url, pageParams, containerWithElements, searchedElement);
+    const parserForm: ParserForm = new ParserForm(url, pageParams, elementsContainer, searchedElement);
 
     const formError = isObjectFilled(parserForm);
     if(formError != "")
@@ -29,10 +30,11 @@ export default function ParserPage({}: ParserPageProps) {
 
     const jsonParserForm: string = JSON.stringify(parserForm);
     handleDownload(jsonParserForm);
+    alert("Запрос был успешно отправлен! Ожидайте обратного ответа");
   };
 
-  const handleSearchedElementChange = (element: SearchedElement) => {
-    setSearchedElement(element);
+  const handleSearchedElementChange = (newElement: SearchedElement) => {
+    setSearchedElement(newElement);
   }
   const handleUrlChange = (value:string) => { setUrl(value); };
 
@@ -40,9 +42,10 @@ export default function ParserPage({}: ParserPageProps) {
     <div className={CSS["parser-page"]}>
       <h1 className={CSS["parser-page__title"]}>Turtle Parser App</h1>
       <InputText placeholder='Enter the url of the site page you need' value={url} onChange={(handleUrlChange)} textRequired={true} />
+
       <PageParamsForm pageParams={pageParams} setPageParams={setPageParams} />
-      <ListOfElementsForm listOfElements={containerWithElements} setListOfElements={setContainerWithElements} />
-      <ElementForm onChildElementChange={(newElement:SearchedElement) => handleSearchedElementChange(newElement)} elemIndex={1}/>
+      <ContainerWithElements searchedElement={searchedElement} setElementsContainer={setElementsContainer} setSearchedElement={(newElement:SearchedElement) => handleSearchedElementChange(newElement)}/>
+      {/* <ElementForm onChildElementChange={setSearchedElement} /> */}
       <div className={CSS["parser-page__send-btn"]}>
         <RoundedButton text='Send form' handleClick={()=>handleParse()} />
       </div>

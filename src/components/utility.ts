@@ -71,15 +71,18 @@ export function isValidUrl(url: string): boolean {
 export const handleDownload = async (jsonParserForm:string) => {
   try {
     const response = await axios.post(PYTHON_PARSER_URL+'/api/parser', { "api_key": PARSER_API_KEY, json: jsonParserForm });
-    const blob = new Blob([new TextEncoder().encode(response.data)], { type: 'application/json;charset=utf-8' });
+    const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
     
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = 'table.csv';
+
+    alert("Данные были успешно получены! Сейчас начнётся загрузка файла.");
     
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    
   } catch (error) {
     let errorText = "";
     if (axios.isAxiosError(error))

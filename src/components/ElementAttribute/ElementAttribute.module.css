@@ -1,0 +1,20 @@
+.element-attribute {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.element-attribute__hint-text {
+}
+
+.element-attribute__text-input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.element-attribute__radio-input {
+    margin-right: 5px;
+}

@@ -52,6 +52,11 @@ export enum TypeOfSearchedInfoPlace {
     FromAttribute = 'FromAttribute'
 }
 
+export type SearchedElementAttribute = {
+    typeOfSearchElement: TypeOfSearchingElement,
+    nameOfType: string
+}
+
 export const getTypeOfSearchingElementByString = (typeOfSearchingElement: string): TypeOfSearchingElement =>
     TypeOfSearchingElement[typeOfSearchingElement as keyof typeof TypeOfSearchingElement];
 

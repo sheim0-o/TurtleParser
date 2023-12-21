@@ -3,10 +3,35 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #ecf0f1;
+    overflow-x: scroll;
 }
 .container-with-elements__title {
     color: #333;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
     margin-bottom: 10px;
+}
+
+.container-with-elements__form {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.container-with-elements__form-open-tag {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.container-with-elements__form-open-tag-attrs {
+    display: flex;
+    gap: 20px;
+}
+
+.container-with-elements__form-close-tag {
+}
+
+.container-with-elements__searched-element {
+    margin-left: 30px;
 }
