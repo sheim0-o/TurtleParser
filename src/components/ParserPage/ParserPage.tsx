@@ -4,7 +4,7 @@ import {RoundedButton} from '../UI/RoundedButton/RoundedButton';
 import { ElementsContainer, PageParams, ParserForm, SearchedElement } from '../../types';
 import {InputText} from '../UI/InputText/InputText';
 import { handleDownload, isObjectFilled } from '../utility';
-import ContainerWithElements from '../ContainerWithElements/ContainerWithElements';
+import {ContainerWithElements} from '../ContainerWithElements/ContainerWithElements';
 import PageParamsForm from '../PageParamsForm/PageParamsForm';
 import ElementForm from '../ElementForm/ElementForm';
 import { SearchElementForm } from '../SearchElementForm/SearchElementForm';
@@ -44,8 +44,8 @@ export default function ParserPage({}: ParserPageProps) {
       <InputText placeholder='Enter the url of the site page you need' value={url} onChange={(handleUrlChange)} textRequired={true} />
 
       <PageParamsForm pageParams={pageParams} setPageParams={setPageParams} />
-      <ContainerWithElements searchedElement={searchedElement} setElementsContainer={setElementsContainer} setSearchedElement={(newElement:SearchedElement) => handleSearchedElementChange(newElement)}/>
-      {/* <ElementForm onChildElementChange={setSearchedElement} /> */}
+      <ContainerWithElements setElementsContainer={setElementsContainer} setSearchedElement={(newElement:SearchedElement) => handleSearchedElementChange(newElement)}/>
+      
       <div className={CSS["parser-page__send-btn"]}>
         <RoundedButton text='Send form' handleClick={()=>handleParse()} />
       </div>

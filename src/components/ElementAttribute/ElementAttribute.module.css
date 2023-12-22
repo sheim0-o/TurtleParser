@@ -8,11 +8,14 @@
 .element-attribute__hint-text {
 }
 
-.element-attribute__text-input {
+.element-attribute__text-input input {
     padding: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-family: 'Courier New', Courier, monospace;
+}
+.element-attribute__text-input input:disabled {
+    background-color: #e7e7e7;
 }
 
 .element-attribute__radio-input {

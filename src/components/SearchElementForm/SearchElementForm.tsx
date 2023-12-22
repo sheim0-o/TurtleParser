@@ -1,73 +1,70 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useMemo, useState } from 'react'
 import CSS from "./SearchElementForm.module.css"
 import { SearchedElement, SearchedInfo, TypeOfSearchingElement, getTypeOfSearchingElementByString } from '../../types';
-import ElementAttribute from '../ElementAttribute/ElementAttribute';
+import {ElementAttribute} from '../ElementAttribute/ElementAttribute';
 import { RoundedButton } from '../UI/RoundedButton/RoundedButton';
 import { SearchInfoInElemForm } from '../SearchInfoInElemForm/SearchInfoInElemForm';
 
 interface SearchElementFormProps {
-    searchedElement: SearchedElement;
     setSearchedElement: (searchedElement:SearchedElement) => void;
 }
 
-export const SearchElementForm = ({searchedElement, setSearchedElement}: SearchElementFormProps) => {    
+export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormProps) => {    
     const getUpdatedSearchedElement = (el:SearchedElement): SearchedElement => Object.assign(new SearchedElement(), el) as SearchedElement; 
     const getTypeOfSearchingByIndex = (index:number) => Object.keys(TypeOfSearchingElement)[index];
-    const getIndexOfTypeOfSearching = (type:TypeOfSearchingElement) => Object.keys(TypeOfSearchingElement).find(key => key === type);
+    const getIndexOfTypeOfSearching = (type:TypeOfSearchingElement) => Object.keys(TypeOfSearchingElement).findIndex(key => key === type);
 
-
-    const [inputText, setInputText] = useState<string>(searchedElement.nameOfType);
-    const [selectedRadio, setSelectedRadio] = useState<number>(1);
+    const [currentElement, setCurrentElement] = useState<SearchedElement>(new SearchedElement());
+    const selectedRadio = useMemo(()=>getIndexOfTypeOfSearching(currentElement.typeOfSearchElement), [currentElement]);
 
     
     const onChangedCurrentElem = (newCurrentElem:SearchedElement) => {
-        setSearchedElement(newCurrentElem);    
+        const newElement = getUpdatedSearchedElement(newCurrentElem);
+        setCurrentElement(newElement);
+        setSearchedElement(newElement);    
     };
 
     const handleRadioChange = (inputNumber: number) => {
         const newType = getTypeOfSearchingElementByString(getTypeOfSearchingByIndex(inputNumber));
-        setSelectedRadio(inputNumber);
-        setInputText("");
-        const updatedCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const updatedCurrentElement = getUpdatedSearchedElement(currentElement);
         updatedCurrentElement.typeOfSearchElement = newType;
         onChangedCurrentElem(updatedCurrentElement);
     };
     const handleTextChange = (value: string) => {
-        setInputText(value);
-        const updatedCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const updatedCurrentElement = getUpdatedSearchedElement(currentElement);
         updatedCurrentElement.nameOfType = value;
         onChangedCurrentElem(updatedCurrentElement);
     };
 
 
     const handleAddChildElement = () => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedElements = [...newCurrentElement.searchedElements, new SearchedElement()];
         onChangedCurrentElem(newCurrentElement);
     };
     const handleRemoveChildElement = (index: number) => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedElements = newCurrentElement.searchedElements.filter((_, i) => i !== index);
         onChangedCurrentElem(newCurrentElement);
     };
     const handleChangedChildElement = (index: number, element: SearchedElement) => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedElements[index] = element;
         onChangedCurrentElem(newCurrentElement);
     }; 
 
     const handleAddSearchedInfoField = () => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedInfo = [...newCurrentElement.searchedInfo, new SearchedInfo()];
         onChangedCurrentElem(newCurrentElement);
     };
     const handleRemoveSearchedInfoField = (index: number) => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedInfo = newCurrentElement.searchedInfo.filter((_, i) => i !== index);
         onChangedCurrentElem(newCurrentElement);
     };
     const handleChangedSearchedInfoField = (index: number, infoField: SearchedInfo) => {
-        const newCurrentElement = getUpdatedSearchedElement(searchedElement);
+        const newCurrentElement = getUpdatedSearchedElement(currentElement);
         newCurrentElement.searchedInfo[index] = infoField;
         onChangedCurrentElem(newCurrentElement);
     };
@@ -118,8 +115,8 @@ export const SearchElementForm = ({searchedElement, setSearchedElement}: SearchE
                 </div>
                 <div className={CSS["element-form__list-of-searched-info"]}>
                     {
-                    searchedElement.searchedInfo.length > 0
-                        ? searchedElement.searchedInfo.map((searchedInfoField, i) => (
+                    currentElement.searchedInfo.length > 0
+                        ? currentElement.searchedInfo.map((searchedInfoField, i) => (
                             <div className={CSS["element-form__searched-info-field"]} key={i}>
                                 <SearchInfoInElemForm key={i} searchedInfo={searchedInfoField} callback={(newSearchedInfo) => handleChangedSearchedInfoField(i, newSearchedInfo)} infoIndex={i} />
                                 <div className={CSS["element-form__searched-info-delete-btn"]}>
@@ -133,13 +130,13 @@ export const SearchElementForm = ({searchedElement, setSearchedElement}: SearchE
         
                 <div className={CSS["element-form__list-of-child-elements"]}>
                     {
-                    searchedElement.searchedElements.length > 0 
-                        ? searchedElement.searchedElements.map((element, i) => (
+                    currentElement.searchedElements.length > 0 
+                        ? currentElement.searchedElements.map((element, i) => (
                             <div className={CSS["element-form__child-element"] + " elem-"+i} key={i}>
                                 <div className={CSS["element-form__child-element-delete-btn"]}>
                                     <RoundedButton text='×' handleClick={() => handleRemoveChildElement(i)} />
                                 </div>
-                                <SearchElementForm searchedElement={element} setSearchedElement={(newElement: SearchedElement) => handleChangedChildElement(i, newElement)}/>
+                                <SearchElementForm setSearchedElement={(newElement: SearchedElement) => handleChangedChildElement(i, newElement)}/>
                             </div>
                         ))
                         : <div className={CSS["element-form__no-child-elements"]}>
@@ -151,12 +148,9 @@ export const SearchElementForm = ({searchedElement, setSearchedElement}: SearchE
                     
             </div>
             
-
-            <div className={CSS["element-form__close-tag"]}>{`</${selectedRadio==0?inputText:""} id="${selectedRadio==1?inputText:""}" class="${selectedRadio==2?inputText:""}">`}</div>
+            <div className={CSS["element-form__close-tag"]}>
+            {`</${selectedRadio==0?currentElement.nameOfType:""} id="${selectedRadio==1?currentElement.nameOfType:""}" class="${selectedRadio==2?currentElement.nameOfType:""}">`}
+            </div>
         </div>
     );
-};
-
-
-
-        
+});

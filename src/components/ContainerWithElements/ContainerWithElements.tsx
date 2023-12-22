@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import CSS from "./ContainerWithElements.module.css"
 import { ElementsContainer, SearchedElement, SearchedElementAttribute, TypeOfSearchingElement, getTypeOfSearchingElementByString } from '../../types';
-import ElementAttribute from '../ElementAttribute/ElementAttribute';
+import {ElementAttribute} from '../ElementAttribute/ElementAttribute';
 import { SearchElementForm } from '../SearchElementForm/SearchElementForm';
 
 type ContainerWithElementsProps = {
-    searchedElement: SearchedElement,
     setElementsContainer: React.Dispatch<React.SetStateAction<ElementsContainer>>;
     setSearchedElement: (newElement:SearchedElement)=>void;
 }
 
-export default function ContainerWithElements({searchedElement, setElementsContainer, setSearchedElement}: ContainerWithElementsProps) {
+export const ContainerWithElements = memo(({ setElementsContainer, setSearchedElement}: ContainerWithElementsProps) => {
     const [inputText, setInputText] = useState<string>('');
     const [selectedRadio, setSelectedRadio] = useState<number>(1);
   
@@ -67,11 +66,11 @@ export default function ContainerWithElements({searchedElement, setElementsConta
                 </div>
 
                 <div className={CSS["container-with-elements__searched-element"]}>
-                    <SearchElementForm searchedElement={searchedElement} setSearchedElement={(newElement:SearchedElement)=>setSearchedElement(newElement)}/>
+                    <SearchElementForm setSearchedElement={(newElement:SearchedElement)=>setSearchedElement(newElement)}/>
                 </div>
         
                 <div className={CSS["container-with-elements__form-close-tag"]}>{`</${selectedRadio==0?inputText:""} id="${selectedRadio==1?inputText:""}" class="${selectedRadio==2?inputText:""}">`}</div>
             </div>
         </div>
     );
-};
+});
