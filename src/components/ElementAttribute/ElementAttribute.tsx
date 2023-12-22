@@ -20,7 +20,7 @@ export const ElementAttribute = memo(({hintText, selectedRadio, idOfRadio, onTex
 
   useEffect(() => {
     if (selectedRadio !== idOfRadio) {
-        setInputText('');
+      handleTextChange('');
     }
   }, [selectedRadio, idOfRadio]);
 

@@ -1,39 +1,41 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useMemo, useState } from 'react'
 import CSS from "./ContainerWithElements.module.css"
-import { ElementsContainer, SearchedElement, SearchedElementAttribute, TypeOfSearchingElement, getTypeOfSearchingElementByString } from '../../types';
+import { ElementsContainer, SearchedElement, getIndexOfTypeOfSearching, getTypeOfSearchingByIndex, getTypeOfSearchingElementByString } from '../../types';
 import {ElementAttribute} from '../ElementAttribute/ElementAttribute';
 import { SearchElementForm } from '../SearchElementForm/SearchElementForm';
 
 type ContainerWithElementsProps = {
+    elementsContainer:ElementsContainer;
     setElementsContainer: React.Dispatch<React.SetStateAction<ElementsContainer>>;
+    searchedElement:SearchedElement;
     setSearchedElement: (newElement:SearchedElement)=>void;
 }
 
-export const ContainerWithElements = memo(({ setElementsContainer, setSearchedElement}: ContainerWithElementsProps) => {
-    const [inputText, setInputText] = useState<string>('');
-    const [selectedRadio, setSelectedRadio] = useState<number>(1);
+export const ContainerWithElements = memo(({ elementsContainer, setElementsContainer, searchedElement, setSearchedElement}: ContainerWithElementsProps) => {
+    const [currentElementsContainer, setCurrentElementsContainer] = useState<ElementsContainer>(elementsContainer);
+    const [currentSearchedElement, setCurrentSearchedElement] = useState<SearchedElement>(searchedElement);
+    const selectedRadio: number = useMemo(()=>getIndexOfTypeOfSearching(currentElementsContainer.typeOfSearchElement), [currentElementsContainer]);
   
     const handleRadioChange = (inputNumber: number) => {
-        const newType = getTypeOfSearchingElementByString(Object.keys(TypeOfSearchingElement)[inputNumber]);
-        setSelectedRadio(inputNumber);
-        setInputText("");
-        onChangeContainer(new ElementsContainer(newType, inputText));
+        const newType = getTypeOfSearchingElementByString(getTypeOfSearchingByIndex(inputNumber)); 
+        onChangeContainer(new ElementsContainer(newType, currentElementsContainer.nameOfType));
     };
-
     const handleTextChange = (value: string) => {
-        const type = getTypeOfSearchingElementByString(Object.keys(TypeOfSearchingElement)[selectedRadio]);
-        setInputText(value);
+        const type = getTypeOfSearchingElementByString(getTypeOfSearchingByIndex(selectedRadio));
         onChangeContainer(new ElementsContainer(type, value));
     };
-
-    const onChangeContainer = (searchedElementAttribute:SearchedElementAttribute) => {
-        const newElementsContainer = new ElementsContainer(searchedElementAttribute.typeOfSearchElement, searchedElementAttribute.nameOfType);
+    const onChangeContainer = (newElementsContainer:ElementsContainer) => {
+        setCurrentElementsContainer(newElementsContainer);
         setElementsContainer(newElementsContainer);
+    };
+    const onChangeSearchedElement = (newSearchedElement:SearchedElement) => {
+        setCurrentSearchedElement(newSearchedElement);
+        setSearchedElement(newSearchedElement);
     };
   
     return (
         <div className={CSS["container-with-elements"]}>
-            <h3 className={CSS["container-with-elements__title"]}>Container with searched element</h3>
+            <h3 className={CSS["container-with-elements__title"]}>Form for searching info in elements</h3>
             <div className={CSS["container-with-elements__form"]}>
                 <div className={CSS["container-with-elements__form-open-tag"]}>
                     {"<"}
@@ -66,10 +68,12 @@ export const ContainerWithElements = memo(({ setElementsContainer, setSearchedEl
                 </div>
 
                 <div className={CSS["container-with-elements__searched-element"]}>
-                    <SearchElementForm setSearchedElement={(newElement:SearchedElement)=>setSearchedElement(newElement)}/>
+                    <SearchElementForm searchedElement={currentSearchedElement} setSearchedElement={(newElement:SearchedElement)=>onChangeSearchedElement(newElement)}/>
                 </div>
         
-                <div className={CSS["container-with-elements__form-close-tag"]}>{`</${selectedRadio==0?inputText:""} id="${selectedRadio==1?inputText:""}" class="${selectedRadio==2?inputText:""}">`}</div>
+                <div className={CSS["container-with-elements__form-close-tag"]}>
+                    {`</${selectedRadio==0?currentElementsContainer.nameOfType:""} id="${selectedRadio==1?currentElementsContainer.nameOfType:""}" class="${selectedRadio==2?currentElementsContainer.nameOfType:""}">`}
+                </div>
             </div>
         </div>
     );

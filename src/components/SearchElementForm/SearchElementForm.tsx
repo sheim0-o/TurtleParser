@@ -1,20 +1,18 @@
 import React, { memo, useMemo, useState } from 'react'
 import CSS from "./SearchElementForm.module.css"
-import { SearchedElement, SearchedInfo, TypeOfSearchingElement, getTypeOfSearchingElementByString } from '../../types';
-import {ElementAttribute} from '../ElementAttribute/ElementAttribute';
+import { SearchedElement, SearchedInfo, getIndexOfTypeOfSearching, getTypeOfSearchingByIndex, getTypeOfSearchingElementByString, getUpdatedSearchedElement } from '../../types';
 import { RoundedButton } from '../UI/RoundedButton/RoundedButton';
 import { SearchInfoInElemForm } from '../SearchInfoInElemForm/SearchInfoInElemForm';
+import { ElementAttribute } from '../ElementAttribute/ElementAttribute';
+import { v4 as uuidv4 } from 'uuid';
 
 interface SearchElementFormProps {
+    searchedElement:SearchedElement;
     setSearchedElement: (searchedElement:SearchedElement) => void;
 }
 
-export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormProps) => {    
-    const getUpdatedSearchedElement = (el:SearchedElement): SearchedElement => Object.assign(new SearchedElement(), el) as SearchedElement; 
-    const getTypeOfSearchingByIndex = (index:number) => Object.keys(TypeOfSearchingElement)[index];
-    const getIndexOfTypeOfSearching = (type:TypeOfSearchingElement) => Object.keys(TypeOfSearchingElement).findIndex(key => key === type);
-
-    const [currentElement, setCurrentElement] = useState<SearchedElement>(new SearchedElement());
+export const SearchElementForm = memo(({searchedElement, setSearchedElement}: SearchElementFormProps) => {
+    const [currentElement, setCurrentElement] = useState<SearchedElement>(searchedElement);
     const selectedRadio = useMemo(()=>getIndexOfTypeOfSearching(currentElement.typeOfSearchElement), [currentElement]);
 
     
@@ -39,7 +37,7 @@ export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormPr
 
     const handleAddChildElement = () => {
         const newCurrentElement = getUpdatedSearchedElement(currentElement);
-        newCurrentElement.searchedElements = [...newCurrentElement.searchedElements, new SearchedElement()];
+        newCurrentElement.searchedElements = [...newCurrentElement.searchedElements, new SearchedElement(uuidv4())];
         onChangedCurrentElem(newCurrentElement);
     };
     const handleRemoveChildElement = (index: number) => {
@@ -55,7 +53,7 @@ export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormPr
 
     const handleAddSearchedInfoField = () => {
         const newCurrentElement = getUpdatedSearchedElement(currentElement);
-        newCurrentElement.searchedInfo = [...newCurrentElement.searchedInfo, new SearchedInfo()];
+        newCurrentElement.searchedInfo = [...newCurrentElement.searchedInfo, new SearchedInfo(uuidv4())];
         onChangedCurrentElem(newCurrentElement);
     };
     const handleRemoveSearchedInfoField = (index: number) => {
@@ -117,8 +115,8 @@ export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormPr
                     {
                     currentElement.searchedInfo.length > 0
                         ? currentElement.searchedInfo.map((searchedInfoField, i) => (
-                            <div className={CSS["element-form__searched-info-field"]} key={i}>
-                                <SearchInfoInElemForm key={i} searchedInfo={searchedInfoField} callback={(newSearchedInfo) => handleChangedSearchedInfoField(i, newSearchedInfo)} infoIndex={i} />
+                            <div className={CSS["element-form__searched-info-field"]} key={searchedInfoField.id}>
+                                <SearchInfoInElemForm searchedInfo={searchedInfoField} setSearchedInfo={(newSearchedInfo) => handleChangedSearchedInfoField(i, newSearchedInfo)} infoIndex={i} />
                                 <div className={CSS["element-form__searched-info-delete-btn"]}>
                                     <RoundedButton text='Remove searched info' handleClick={() => handleRemoveSearchedInfoField(i)} />
                                 </div>
@@ -131,14 +129,16 @@ export const SearchElementForm = memo(({setSearchedElement}: SearchElementFormPr
                 <div className={CSS["element-form__list-of-child-elements"]}>
                     {
                     currentElement.searchedElements.length > 0 
-                        ? currentElement.searchedElements.map((element, i) => (
-                            <div className={CSS["element-form__child-element"] + " elem-"+i} key={i}>
+                        ? currentElement.searchedElements.map((subElement, i) => {
+                            const id = uuidv4();
+                            return (
+                            <div className={CSS["element-form__child-element"] + " elem-"+i} key={subElement.id}>
                                 <div className={CSS["element-form__child-element-delete-btn"]}>
                                     <RoundedButton text='×' handleClick={() => handleRemoveChildElement(i)} />
                                 </div>
-                                <SearchElementForm setSearchedElement={(newElement: SearchedElement) => handleChangedChildElement(i, newElement)}/>
+                                <SearchElementForm searchedElement={subElement} setSearchedElement={(newElement: SearchedElement) => handleChangedChildElement(i, newElement)}/>
                             </div>
-                        ))
+                        )})
                         : <div className={CSS["element-form__no-child-elements"]}>
                             <p>{"<>"}</p>
                             <p>{"</>"}</p>

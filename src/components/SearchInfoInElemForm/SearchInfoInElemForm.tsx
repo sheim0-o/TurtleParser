@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import CSS from "./SearchInfoInElemForm.module.css";
 import { InputText } from '../UI/InputText/InputText';
 import Selectable from '../UI/Selectable/Selectable';
@@ -6,40 +6,40 @@ import { SearchedInfo, TypeOfSearchedInfoPlace, getTypeOfSearchedInfoPlaceByStri
 
 type SearchInfoInElemFormProps = {
   searchedInfo: SearchedInfo;
-  callback:(searchedInfo:SearchedInfo)=>void;
+  setSearchedInfo:(searchedInfo:SearchedInfo)=>void;
   infoIndex:number;
 };
 
-export const SearchInfoInElemForm = memo(({ searchedInfo, callback, infoIndex }: SearchInfoInElemFormProps) => {
-  const [fieldName, setFieldName] = useState<string>(searchedInfo.targetColumn);
-  const [typeOfValuePlace, setTypeOfValuePlace] = useState<TypeOfSearchedInfoPlace>(searchedInfo.typeOfSearchedInfoPlace);
-  const [attributeName, setAttributeName] = useState<string | null>(searchedInfo.attributeName);
+export const SearchInfoInElemForm = memo(({ searchedInfo, setSearchedInfo, infoIndex }: SearchInfoInElemFormProps) => {
+  const [currentSearchedInfo, setCurrentSearchedInfo] = useState<SearchedInfo>(searchedInfo);
 
   const handleFieldNameChange = (value:string) => {
-    setFieldName(value);
-    callback(new SearchedInfo(value, typeOfValuePlace, attributeName));
+    const newSearchedInfo = new SearchedInfo(currentSearchedInfo.id, value, currentSearchedInfo.typeOfSearchedInfoPlace, currentSearchedInfo.attributeName);
+    handleInfoUpdated(newSearchedInfo);
   };
-
-  const handleAttributeNameChange = (value:string) => {
-    setAttributeName(value);
-    callback(new SearchedInfo(fieldName, typeOfValuePlace, value));
-  };
-  
   const handleTypeChange = (value: string) => {
     const newTypeOfValuePlace: TypeOfSearchedInfoPlace = getTypeOfSearchedInfoPlaceByString(value);
-    setTypeOfValuePlace(newTypeOfValuePlace);
-    setAttributeName(newTypeOfValuePlace === TypeOfSearchedInfoPlace.InnerText ? null : "");
-    callback(new SearchedInfo(fieldName, newTypeOfValuePlace, attributeName));
+    const newSearchedInfo = new SearchedInfo(currentSearchedInfo.id, currentSearchedInfo.targetColumn, newTypeOfValuePlace, currentSearchedInfo.attributeName);
+    handleInfoUpdated(newSearchedInfo);
   };
+  const handleAttributeNameChange = (value:string) => {
+    const newSearchedInfo = new SearchedInfo(currentSearchedInfo.id, currentSearchedInfo.targetColumn, currentSearchedInfo.typeOfSearchedInfoPlace, value);
+    handleInfoUpdated(newSearchedInfo);
+  };
+
+  const handleInfoUpdated = (newInfo:SearchedInfo) => {
+    setCurrentSearchedInfo(newInfo);
+    setSearchedInfo(newInfo);
+  }
 
   return (
     <div className={CSS['field-of-element']}>
       <h4 className={CSS["field-of-element__title"]}>Searched info {infoIndex+1}</h4>
-      <InputText value={fieldName} onChange={handleFieldNameChange} placeholder={"Enter field name"} textRequired={true}/>
-      <Selectable value={typeOfValuePlace} options={Object.keys(TypeOfSearchedInfoPlace)} callback={handleTypeChange} />
+      <InputText value={currentSearchedInfo.targetColumn} onChange={handleFieldNameChange} placeholder={"Enter field name"} textRequired={true}/>
+      <Selectable value={currentSearchedInfo.typeOfSearchedInfoPlace} options={Object.keys(TypeOfSearchedInfoPlace)} callback={handleTypeChange} />
       {
-        typeOfValuePlace === TypeOfSearchedInfoPlace.FromAttribute && 
-          <InputText value={attributeName||''} onChange={handleAttributeNameChange} placeholder={"Enter attribute name"} textRequired={true}/>
+        currentSearchedInfo.typeOfSearchedInfoPlace === TypeOfSearchedInfoPlace.FromAttribute && 
+          <InputText value={currentSearchedInfo.attributeName||''} onChange={handleAttributeNameChange} placeholder={"Enter attribute name"} textRequired={true}/>
       }
     </div>
   );

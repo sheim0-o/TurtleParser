@@ -3,7 +3,8 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #ecf0f1;
-    overflow-x: scroll;
+    overflow: scroll;
+    max-height: 80vw;
 }
 .container-with-elements__title {
     color: #333;

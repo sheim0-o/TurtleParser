@@ -3,7 +3,7 @@ export class ParserForm {
         public url: string = "",
         public pageParams: PageParams = new PageParams(),
         public elementsContainer: ElementsContainer = new ElementsContainer(),
-        public searchedElement: SearchedElement = new SearchedElement()
+        public searchedElement: SearchedElement = new SearchedElement(undefined)
     ) {}
 }
 
@@ -26,6 +26,7 @@ export class ElementsContainer {
 
 export class SearchedElement {
     constructor(
+        public id: string|undefined,
         public typeOfSearchElement: TypeOfSearchingElement = TypeOfSearchingElement.SearchByTag,
         public nameOfType: string = "",
         public searchedInfo: SearchedInfo[] = [],
@@ -35,6 +36,7 @@ export class SearchedElement {
 
 export class SearchedInfo {
     constructor(
+        public id: string|undefined,
         public targetColumn: string = "",
         public typeOfSearchedInfoPlace: TypeOfSearchedInfoPlace = TypeOfSearchedInfoPlace.InnerText,
         public attributeName: string | null = null
@@ -62,3 +64,8 @@ export const getTypeOfSearchingElementByString = (typeOfSearchingElement: string
 
 export const getTypeOfSearchedInfoPlaceByString = (typeOfSearchedInfoPlace: string): TypeOfSearchedInfoPlace =>
     TypeOfSearchedInfoPlace[typeOfSearchedInfoPlace as keyof typeof TypeOfSearchedInfoPlace];
+
+    
+export const getUpdatedSearchedElement = (el:SearchedElement): SearchedElement => Object.assign(new SearchedElement(undefined), el) as SearchedElement; 
+export const getTypeOfSearchingByIndex = (index:number) => Object.keys(TypeOfSearchingElement)[index];
+export const getIndexOfTypeOfSearching = (type:TypeOfSearchingElement) => Object.keys(TypeOfSearchingElement).findIndex(key => key === type);
