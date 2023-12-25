@@ -1,10 +1,11 @@
 import React, { memo, useMemo, useState } from 'react'
 import CSS from "./SearchElementForm.module.css"
-import { SearchedElement, SearchedInfo, getIndexOfTypeOfSearching, getTypeOfSearchingByIndex, getTypeOfSearchingElementByString, getUpdatedSearchedElement } from '../../types';
+import { SearchedElement, SearchedInfo, getIndexOfTypeOfSearching, getTypeOfSearchingByIndex, getTypeOfSearchingElementByString, getUpdatedSearchedElement } from '../types';
 import { RoundedButton } from '../UI/RoundedButton/RoundedButton';
 import { SearchInfoInElemForm } from '../SearchInfoInElemForm/SearchInfoInElemForm';
 import { ElementAttribute } from '../ElementAttribute/ElementAttribute';
 import { v4 as uuidv4 } from 'uuid';
+import { localizedText, useLanguage } from '../LanguageContext/LanguageContext';
 
 interface SearchElementFormProps {
     searchedElement:SearchedElement;
@@ -15,6 +16,7 @@ export const SearchElementForm = memo(({searchedElement, setSearchedElement}: Se
     const [currentElement, setCurrentElement] = useState<SearchedElement>(searchedElement);
     const selectedRadio = useMemo(()=>getIndexOfTypeOfSearching(currentElement.typeOfSearchElement), [currentElement]);
 
+    const { language } = useLanguage();
     
     const onChangedCurrentElem = (newCurrentElem:SearchedElement) => {
         const newElement = getUpdatedSearchedElement(newCurrentElem);
@@ -105,10 +107,10 @@ export const SearchElementForm = memo(({searchedElement, setSearchedElement}: Se
 
                 <div className={CSS["element-form__content-actions"]}>
                     <div className={CSS["element-form__content-action"]}>
-                        <RoundedButton text='Add searched info' handleClick={() => handleAddSearchedInfoField()} />
+                        <RoundedButton text={localizedText(language, "SEARCHED_INFO_BTN_ADD_SI")} handleClick={() => handleAddSearchedInfoField()} />
                     </div>
                     <div className={CSS["element-form__content-action"]}>
-                        <RoundedButton text='Add child element' handleClick={() => handleAddChildElement()} />
+                        <RoundedButton text={localizedText(language, "SEARCHED_INFO_BTN_ADD_SE")} handleClick={() => handleAddChildElement()} />
                     </div>
                 </div>
                 <div className={CSS["element-form__list-of-searched-info"]}>
@@ -122,7 +124,7 @@ export const SearchElementForm = memo(({searchedElement, setSearchedElement}: Se
                                 </div>
                             </div>
                         ))
-                        : <p className={CSS["element-form__no-data-message"]}>No searched info selected</p>
+                        : <p className={CSS["element-form__no-data-message"]}>{localizedText(language, "NO_SEARCHED_INFO")}</p>
                     }
                 </div>
         

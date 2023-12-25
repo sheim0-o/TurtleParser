@@ -1,6 +1,7 @@
 import axios from "axios";
-import { ParserForm, SearchedElement, TypeOfSearchedInfoPlace } from "../types";
-import { PARSER_API_KEY, PYTHON_PARSER_URL } from "../strings";
+import { ParserForm, SearchedElement, TypeOfSearchedInfoPlace } from "../components/types";
+import { Language, localizedText, useLanguage } from "../components/LanguageContext/LanguageContext";
+import { useCustomAlert } from "../components/UI/CustomAlert/CustomAlertContext";
 
 export const isObjectFilled = (obj: ParserForm): string => {
     let hasAtLeastOneSearchedInfo:boolean = false;
@@ -35,27 +36,22 @@ export const isObjectFilled = (obj: ParserForm): string => {
 
     // if url is empty
     if (!isValidUrl(obj.url)) 
-      return "The URL is incorrect!";
+      return "MSG_URL_IS_INCORRECT";
     //
     
-    // if name of url page parameter filled, if isMultiplePages set true 
+    // if name of url page parameter filled, if isMultiplePages set true and query parameter for number of parameter
     if (obj.pageParams.isMultiplePages && !obj.pageParams.nameOfPageParam.trim())
-      return "The name for the page parameter is not set!";
+      return "MSG_QP_FOR_NUMBER_OF_PARAMETER_IS_NOT_SET";
     //
 
-    // if elementsContainer has empty nameOfType
-    if (!obj.elementsContainer.nameOfType.trim())
-      return "Not not all required fields are filled in!";
-    //
-
-    // if all fields in searched elements filled
-    if (!isAllFieldsInSearchedElementsFilled(obj.searchedElement))
-      return "Not not all required fields are filled in!";
+    // if elementsContainer has empty nameOfType or exist empty fields in searched elements
+    if (!(obj.elementsContainer.nameOfType.trim()) || !isAllFieldsInSearchedElementsFilled(obj.searchedElement))
+      return "MSG_NOT_ALL_FIELDS_ARE_FILLED";
     //
 
     // if there are no SearchedInfo
     if (!hasAtLeastOneSearchedInfo)
-      return "At least one searched info is needed!";
+      return "MSG_NO_ONE_SEARCHED_INFO";
     //
 
     // if all fields and data are entered correctly
@@ -70,18 +66,18 @@ export function isValidUrl(url: string): boolean {
 
 export const handleDownload = async (jsonParserForm:string) => {
   try {
-    const response = await axios.post(PYTHON_PARSER_URL+'/api/parser', { "api_key": PARSER_API_KEY, json: jsonParserForm });
+    const response = await axios.post(process.env.REACT_APP_PYTHON_PARSER_URL+'/api/parser', { "api_key": process.env.REACT_APP_PARSER_API_KEY, json: jsonParserForm });
     const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8' });
     
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = 'table.csv';
-
-    alert("Данные были успешно получены! Сейчас начнётся загрузка файла.");
     
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    return {status:"success", message:""};
     
   } catch (error) {
     let errorText = "";
@@ -95,8 +91,7 @@ export const handleDownload = async (jsonParserForm:string) => {
       else
         errorText = error.message;
     }
-    if(errorText!="")
-      alert(errorText)
     console.error('Error:', error);
+    return {status:"error", message:errorText};
   }
 };

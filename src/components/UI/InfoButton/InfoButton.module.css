@@ -1,0 +1,27 @@
+.info-button {
+    background-color: white;
+    border: 2px solid #83d44c;
+    color: #83d44c;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-family: 'Times New Roman', Times, serif;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.25s;
+}
+  
+.info-button:hover {
+    border-color: #60b428;
+    color: #60b428;
+}
+  
+.info-button__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

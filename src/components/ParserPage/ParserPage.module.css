@@ -15,6 +15,13 @@
     min-height: 96vh;
 }
 
+.parser-page__settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
 .parser-page__title {
     text-align: center;
     color: #333;

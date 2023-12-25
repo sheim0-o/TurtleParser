@@ -2,7 +2,8 @@ import React, { memo, useState } from 'react';
 import CSS from "./SearchInfoInElemForm.module.css";
 import { InputText } from '../UI/InputText/InputText';
 import Selectable from '../UI/Selectable/Selectable';
-import { SearchedInfo, TypeOfSearchedInfoPlace, getTypeOfSearchedInfoPlaceByString } from '../../types';
+import { SearchedInfo, TypeOfSearchedInfoPlace, getTypeOfSearchedInfoPlaceByString } from '../types';
+import { localizedText, useLanguage } from '../LanguageContext/LanguageContext';
 
 type SearchInfoInElemFormProps = {
   searchedInfo: SearchedInfo;
@@ -12,6 +13,7 @@ type SearchInfoInElemFormProps = {
 
 export const SearchInfoInElemForm = memo(({ searchedInfo, setSearchedInfo, infoIndex }: SearchInfoInElemFormProps) => {
   const [currentSearchedInfo, setCurrentSearchedInfo] = useState<SearchedInfo>(searchedInfo);
+  const { language } = useLanguage();
 
   const handleFieldNameChange = (value:string) => {
     const newSearchedInfo = new SearchedInfo(currentSearchedInfo.id, value, currentSearchedInfo.typeOfSearchedInfoPlace, currentSearchedInfo.attributeName);
@@ -34,12 +36,12 @@ export const SearchInfoInElemForm = memo(({ searchedInfo, setSearchedInfo, infoI
 
   return (
     <div className={CSS['field-of-element']}>
-      <h4 className={CSS["field-of-element__title"]}>Searched info {infoIndex+1}</h4>
-      <InputText value={currentSearchedInfo.targetColumn} onChange={handleFieldNameChange} placeholder={"Enter field name"} textRequired={true}/>
+      <h4 className={CSS["field-of-element__title"]}>{localizedText(language, "SEARCHED_INFO_ELEMENT")} {infoIndex+1}</h4>
+      <InputText value={currentSearchedInfo.targetColumn} onChange={handleFieldNameChange} placeholder={localizedText(language, "SEARCHED_INFO_TARGET_TABLE_FIELD")} textRequired={true}/>
       <Selectable value={currentSearchedInfo.typeOfSearchedInfoPlace} options={Object.keys(TypeOfSearchedInfoPlace)} callback={handleTypeChange} />
       {
         currentSearchedInfo.typeOfSearchedInfoPlace === TypeOfSearchedInfoPlace.FromAttribute && 
-          <InputText value={currentSearchedInfo.attributeName||''} onChange={handleAttributeNameChange} placeholder={"Enter attribute name"} textRequired={true}/>
+          <InputText value={currentSearchedInfo.attributeName||''} onChange={handleAttributeNameChange} placeholder={localizedText(language, "SEARCHED_INFO_ATTRIBUTE_NAME")} textRequired={true}/>
       }
     </div>
   );
